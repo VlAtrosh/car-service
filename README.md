@@ -1,6 +1,58 @@
-# car-service
+# AutoServiceSystem
 
-## Структура проекта 
+Система автоматизации автосервиса.
+
+## Запуск
+
+```bash
+cd backend
+pip install -r requirements.txt
+uvicorn app.main:app --reload --port 8000
+```
+
+## API Endpoints
+- POST /api/v1/user/register - регистрация
+
+- POST /api/v1/user/login - вход
+
+- POST /api/v1/order/create - создание заказа
+
+- POST /api/v1/order/{id}/add-work - добавление работы
+
+- PUT /api/v1/order/{id}/status - смена статуса
+
+- GET /api/v1/report/revenue - отчет по выручке
+
+
+---
+
+### 35. `frontend/web/package.json`
+
+```json
+{
+  "name": "autoservice-web",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "echo 'Frontend will be started here'"
+  }
+}
+```
+
+## docker-compose.yml
+```
+version: '3.8'
+services:
+  backend:
+    build: ./docker
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+```
+
+
+## Структура проекта
 
 ```
 auto-service-system/
