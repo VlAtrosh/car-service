@@ -1,4 +1,5 @@
 import uuid
+from typing import List
 from ...core.database import db
 from .models import Order, OrderItem, OrderStatus
 from .status_machine import StatusMachine
@@ -72,4 +73,5 @@ class OrderService:
 
     @staticmethod
     def get_all_orders():
+        from ...core.database import db
         return list(db.orders.values())

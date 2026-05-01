@@ -2,10 +2,60 @@ from fastapi import APIRouter, HTTPException, Depends
 from ...core.dependencies import get_current_user
 from ..user.models import User, UserRole
 from .service import OrderService
-from .models import OrderStatus
+from .models import Order, OrderStatus
 from .schemas import CreateOrderRequest, AddWorkRequest, AddPartRequest
 
 router = APIRouter(prefix="/api/v1/order", tags=["order"])
+
+
+def _order_to_dict(order: Order) -> dict:
+    return {
+        "id": order.id,
+        "number": order.number,
+        "client_id": order.client_id,
+        "car_info": order.car_info,
+        "status": order.status.value,
+        "total": order.total,
+        "items": [
+            {
+                "type": item.type,
+                "id": item.id,
+                "name": item.name,
+                "quantity": item.quantity,
+                "price": item.price,
+                "total": item.total,
+            }
+            for item in order.items
+        ],
+        "created_at": order.created_at.isoformat() if order.created_at else None,
+    }
+
+
+@router.get("/list")
+def list_orders(current_user: User = Depends(get_current_user)):
+    if current_user.role == UserRole.CLIENT:
+        orders = OrderService.get_orders_by_client(current_user.id)
+    else:
+        orders = OrderService.get_all_orders()
+    return [_order_to_dict(o) for o in orders]
+
+
+@router.get("/orders")
+def get_orders(current_user: User = Depends(get_current_user)):
+    """Получить список всех заказов"""
+    orders = OrderService.get_all_orders()
+    return [
+        {
+            "id": o.id,
+            "number": o.number,
+            "client_id": o.client_id,
+            "car_info": o.car_info,
+            "status": o.status.value,
+            "total": o.total,
+            "created_at": o.created_at.isoformat() if hasattr(o, 'created_at') else None
+        }
+        for o in orders
+    ]
 
 
 @router.post("/create")
