@@ -369,7 +369,7 @@ def test_add_part_with_zero_quantity(self):
 | Недостаточно прав (роль не та) | `{"detail": "Not enough rights"}` |
 | Заказ не найден | `{"detail": "Order not found"}` |
 | Невозможно изменить статус | `{"detail": "Cannot change status"}` |
-| Сервер не запущен | `❌ Ошибка подключения к серверу` |
+| Сервер не запущен | `Ошибка подключения к серверу` |
 
 ## ⚙️ Коды возврата API
 
