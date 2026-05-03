@@ -181,7 +181,8 @@ SMS в консоли сервера:
 <img width="1200" height="400" alt="Выпадающее меню пользователя" src="https://github.com/user-attachments/assets/placeholder-menu.png" />
 ```
 
-![Uploading Снимок экрана (1387).png…]()
+<img width="1920" height="996" alt="Снимок экрана (1387)" src="https://github.com/user-attachments/assets/0fe19aea-ade2-4ddf-ad20-bd848de9fcf3" />
+
 
 
 
@@ -285,7 +286,7 @@ auto-service-system/
     └── nginx.conf
 ```
 
-## 📦 Назначение файлов
+## Назначение файлов
 
 | Файл | Что делает |
 |------|------------|
@@ -299,5 +300,116 @@ auto-service-system/
 | `backend/app/modules/integration/` | Экспорт в Excel/PDF |
 | `frontend/web/` | HTML/CSS/JS интерфейс |
 | `tests/` | Модульные и интеграционные тесты |
+
+
+## Ключевые концепции
+
+Авторизация через Bearer Token
+
+```
+# dependencies.py
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+
+security = HTTPBearer()
+
+def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security)):
+    token = credentials.credentials
+    user_id = db.tokens.get(token)
+    return db.users.get(user_id)
+```
+
+Статусная модель заказа
+
+```
+status_machine.py
+_transitions = {
+    OrderStatus.ACCEPTED: [OrderStatus.DIAGNOSTICS],
+    OrderStatus.DIAGNOSTICS: [OrderStatus.WAITING_APPROVAL, OrderStatus.IN_PROGRESS],
+    OrderStatus.IN_PROGRESS: [OrderStatus.READY],
+    OrderStatus.READY: [OrderStatus.COMPLETED],
+}
+```
+
+Три режима сборки (PRODUCTION/DEBUG/TEST)
+
+```
+# config.py
+import os
+
+class ProductionConfig(Config):
+    DEBUG = False
+    ENV = "production"
+
+class DebugConfig(Config):
+    DEBUG = True
+    ENV = "debug"
+
+class TestConfig(Config):
+    DEBUG = False
+    ENV = "test"
+    TESTING = True
+```
+
+Модульные тесты (pytest)
+
+```
+def test_add_part_with_zero_quantity(self):
+    order = OrderService.create_order("client1", "BMW X5")
+    updated_order = OrderService.add_part(order.id, "p1", 0)
+    assert len(updated_order.items) == 0  # Не добавляется
+```
+
+## Обработка ошибок
+
+| Ситуация | Сообщение |
+|----------|-----------|
+| Неверный email или пароль | `{"detail": "Invalid email or password"}` |
+| Токен не предоставлен | `{"detail": "Token not provided"}` |
+| Неверный токен | `{"detail": "Invalid token"}` |
+| Недостаточно прав (роль не та) | `{"detail": "Not enough rights"}` |
+| Заказ не найден | `{"detail": "Order not found"}` |
+| Невозможно изменить статус | `{"detail": "Cannot change status"}` |
+| Сервер не запущен | `❌ Ошибка подключения к серверу` |
+
+## ⚙️ Коды возврата API
+
+| Код | Значение |
+|-----|----------|
+| 200 | Успешное выполнение |
+| 400 | Ошибка валидации / неверный запрос |
+| 401 | Не авторизован (токен не предоставлен или неверен) |
+| 403 | Доступ запрещён (недостаточно прав) |
+| 404 | Объект не найден |
+| 422 | Ошибка валидации Pydantic |
+| 500 | Внутренняя ошибка сервера |
+
+## Результаты тестирования
+
+<img width="1920" height="504" alt="Снимок экрана (1370)" src="https://github.com/user-attachments/assets/8926ddd8-cfb9-47cf-a81a-0e52b2c47153" />
+
+
+## Заключение
+
+AutoServiceSystem — это пример того, как с помощью FastAPI можно организовать полноценную систему автоматизации автосервиса. Вместо того чтобы писать все с нуля, проект использует готовые, проверенные инструменты:
+
+- FastAPI — быстрый и современный фреймворк для API
+
+- Pydantic — валидация данных
+
+- Uvicorn — ASGI-сервер
+
+- Pytest — тестирование
+
+- Ruff / Black — качество кода
+
+Этот подход:
+
+- Ускоряет разработку — не нужно изобретать велосипед
+
+- Повышает надёжность — автоматическая валидация и документация
+
+- Обеспечивает масштабируемость — легко добавить новые модули
+
+- Дает прозрачность — Swagger документация готова сразу
 
 
