@@ -3,92 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Автосервис - Система управления</title>
+    <title>АвтоСервис — Панель управления</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
+    <div id="toast-container" class="toast-container"></div>
+
     <div class="app-layout">
-        <!-- Левое меню -->
+        <!-- Боковое меню -->
         <aside class="sidebar">
             <div class="logo">
-                <h2>🚗 АвтоСервис</h2>
+                <span class="logo-icon">🚗</span>
+                <h1>АвтоСервис</h1>
             </div>
             <nav class="nav-menu">
-                <div class="nav-item active" data-page="orders">
-                    <span class="icon">📋</span>
-                    <span>Заказ-наряды</span>
-                </div>
-                <div class="nav-item" data-page="clients">
-                    <span class="icon">👥</span>
-                    <span>Клиенты</span>
-                </div>
-                <div class="nav-item" data-page="cars">
-                    <span class="icon">🚙</span>
-                    <span>Автомобили</span>
-                </div>
-                <div class="nav-item" data-page="reference">
-                    <span class="icon">📚</span>
-                    <span>Справочники</span>
-                </div>
-                <div class="nav-item" data-page="reports">
+                <!-- Пункт CRM в самом верху -->
+                <a href="#" class="nav-item" data-page="crm">
                     <span class="icon">📊</span>
-                    <span>Отчёты</span>
+                    <span class="nav-text">CRM</span>
+                </a>
+                
+                <!-- Пункт СЕРВИС с выпадающим подменю -->
+                <div class="nav-item has-submenu">
+                    <span class="icon">🔧</span>
+                    <span class="nav-text">Сервис</span>
+                    <span class="submenu-arrow">▼</span>
+                    <div class="submenu">
+                        <a href="#" class="submenu-item" data-page="orders">📋 Заказ-наряды</a>
+                        <a href="#" class="submenu-item" data-page="appointment">📅 Запись на ремонт</a>
+                    </div>
                 </div>
-                <div class="nav-item" data-page="settings">
-                    <span class="icon">⚙️</span>
-                    <span>Настройки</span>
+                
+                <a href="#" class="nav-item" data-page="cars">
+                    <span class="icon">🚙</span>
+                    <span class="nav-text">Автомобили</span>
+                </a>
+                
+                <a href="#" class="nav-item" data-page="reports">
+                    <span class="icon">📊</span>
+                    <span class="nav-text">Отчёты</span>
+                </a>
+                
+                <!-- Пункт СПРАВОЧНИКИ с выпадающим подменю -->
+                <div class="nav-item has-submenu">
+                    <span class="icon">📚</span>
+                    <span class="nav-text">Справочники</span>
+                    <span class="submenu-arrow">▼</span>
+                    <div class="submenu">
+                        <a href="#" class="submenu-item" data-page="clients">👥 Клиенты</a>
+                        <a href="#" class="submenu-item" data-page="workers">🔧 Исполнители</a>
+                        <a href="#" class="submenu-item" data-page="works-ref">⚙️ Работы</a>
+                        <a href="#" class="submenu-item" data-page="parts-ref">🔩 Запчасти</a>
+                    </div>
                 </div>
             </nav>
-            <div class="user-info">
-                <div class="user-avatar">👤</div>
-                <div class="user-details">
-                    <span id="user-name">Загрузка...</span>
-                    <span id="user-role" class="user-role"></span>
+
+            <!-- Блок пользователя с выпадающим меню -->
+            <div class="user-section">
+                <div class="user-card" id="user-profile-btn">
+                    <div class="user-avatar">👤</div>
+                    <div class="user-info">
+                        <div id="user-name" class="user-name">Пользователь</div>
+                        <div id="user-role" class="user-role"></div>
+                        <div class="user-id"><span style="opacity: 0.7;">ID:</span> <span id="user-id"></span></div>
+                    </div>
                 </div>
-                <button id="logout-btn" class="logout-btn">🚪</button>
+                <div class="user-dropdown" id="user-dropdown">
+                    <div class="dropdown-item" id="dropdown-profile">👤 Профиль</div>
+                    <div class="dropdown-item" id="dropdown-logout">🚪 Выход</div>
+                </div>
             </div>
         </aside>
 
-        <!-- Основной контент -->
+        <!-- Основная область -->
         <main class="main-content">
             <header class="top-bar">
-                <h1 id="page-title">Заказ-наряды</h1>
-                <button id="create-order-btn" class="create-btn">+ Создать заказ</button>
+                <h2 id="page-title">Заказ-наряды</h2>
+                <div class="search-container">
+                    <input type="text" id="global-search" placeholder="Поиск...">
+                </div>
+                <button id="create-order-btn" class="btn btn-primary">+ Новый заказ</button>
             </header>
-            
-            <div id="content-area" class="content-area">
-                <div class="loading">Загрузка...</div>
-            </div>
+            <div id="content-area" class="content-area"></div>
         </main>
     </div>
 
     <!-- Модальное окно авторизации -->
-    <div id="login-modal" class="modal">
-        <div class="modal-content">
-            <h2>Авторизация</h2>
-            <form id="login-form">
-                <div class="form-group">
-                    <label>Email:</label>
-                    <input type="email" id="login-email" placeholder="test@mail.ru" required>
-                </div>
-                <div class="form-group">
-                    <label>Пароль:</label>
-                    <input type="password" id="login-password" placeholder="123" required>
-                </div>
-                <div class="form-group">
-                    <label>Имя (для регистрации):</label>
-                    <input type="text" id="register-name" placeholder="Иван Петров">
-                </div>
-                <div class="form-group">
-                    <label>Телефон (для регистрации):</label>
-                    <input type="text" id="register-phone" placeholder="+79123456789">
-                </div>
-                <div class="form-buttons">
-                    <button type="submit" class="btn">Войти</button>
-                    <button type="button" id="register-btn" class="btn-secondary">Зарегистрироваться</button>
-                </div>
-            </form>
-            <div id="login-error" class="error-message"></div>
+    <div id="login-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 10000; align-items: center; justify-content: center;">
+        <div style="background: white; border-radius: 24px; width: 360px; padding: 32px; text-align: center;">
+            <h3 style="margin-bottom: 16px;">Вход в систему</h3>
+            <p style="margin-bottom: 20px; color: #64748b;">test@mail.ru / 123</p>
+            <input type="email" id="login-email" placeholder="Email" value="test@mail.ru" style="width: 100%; padding: 12px; margin-bottom: 12px; border: 1px solid #e2e8f0; border-radius: 12px;">
+            <input type="password" id="login-password" placeholder="Пароль" value="123" style="width: 100%; padding: 12px; margin-bottom: 20px; border: 1px solid #e2e8f0; border-radius: 12px;">
+            <button id="do-login" style="width: 100%; padding: 12px; background: #4f46e5; color: white; border: none; border-radius: 12px; cursor: pointer;">Войти</button>
+            <div id="login-error" style="color: red; margin-top: 12px;"></div>
         </div>
     </div>
 
