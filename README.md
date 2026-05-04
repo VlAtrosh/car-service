@@ -181,7 +181,12 @@ SMS в консоли сервера:
 <img width="1200" height="400" alt="Выпадающее меню пользователя" src="https://github.com/user-attachments/assets/placeholder-menu.png" />
 ```
 
-<img width="1920" height="996" alt="Снимок экрана (1387)" src="https://github.com/user-attachments/assets/0fe19aea-ade2-4ddf-ad20-bd848de9fcf3" />
+
+<img width="1920" height="1030" alt="Снимок экрана (1388)" src="https://github.com/user-attachments/assets/a2277dda-cb59-4756-a0e8-588b2cf146e4" />
+
+<img width="1920" height="1038" alt="Снимок экрана (1390)" src="https://github.com/user-attachments/assets/51fa7df6-d3f7-4035-a286-ed996e2dc076" />
+
+<img width="1920" height="1033" alt="Снимок экрана (1398)" src="https://github.com/user-attachments/assets/18106d4b-28de-464a-b011-eed66e8b45da" />
 
 
 
@@ -385,7 +390,7 @@ def test_add_part_with_zero_quantity(self):
 
 ## Результаты тестирования
 
-<img width="1920" height="504" alt="Снимок экрана (1370)" src="https://github.com/user-attachments/assets/8926ddd8-cfb9-47cf-a81a-0e52b2c47153" />
+<img width="1920" height="860" alt="Снимок экрана (1371)" src="https://github.com/user-attachments/assets/58bbceff-48d1-4ff2-b1b4-a3233c9ec81a" />\
 
 
 ## Заключение
